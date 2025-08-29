@@ -23,3 +23,4 @@ rootProject.name = "Android Basics"
 include(":app")
 include(":androidBasics:greetingCard")
 include(":androidBasics:happyBirthday")
+include(":androidBasics:article")
