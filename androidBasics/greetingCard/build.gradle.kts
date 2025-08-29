@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.androidbasics"
+    namespace = "com.example.greetingcard"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.androidbasics"
+        applicationId = "com.example.secondmodule"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
