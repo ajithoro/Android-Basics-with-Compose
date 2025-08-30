@@ -61,37 +61,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(
-    title: String,
-    desc1: String,
-    desc2: String,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier,
-        verticalArrangement = Arrangement.Top) {
-        Image(
-            painter = painterResource(R.drawable.bg_compose_background),
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth
-        )
-        Text(
-            text = title,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(16.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = desc1,
-            modifier = Modifier.padding(16.dp)
-        )
-        Text(
-            text = desc2,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Composable
 fun FinishScreen(message1: String,
                  message2: String,
                  modifier: Modifier = Modifier) {
@@ -232,10 +201,6 @@ fun GreetingPreview() {
 //                )
 //        )
 
-        Greeting(title = stringResource(R.string.text_title),
-            desc1 = stringResource(R.string.text_desc1),
-            desc2 = stringResource(R.string.text_desc2)
-        )
 
 //        FinishScreen(
 //            message1 = stringResource(R.string.text_all_task),
