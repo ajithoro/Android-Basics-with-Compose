@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -210,98 +211,12 @@ fun Quadrant(title: String,
         }
 }
 
-@Composable
-fun BussinessCard(modifier: Modifier = Modifier) {
-    Column(modifier) {
-        Column(modifier = Modifier
-            .weight(1f)
-            .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Image(
-                modifier = Modifier
-                    .size(200.dp)
-                    .background(
-                        Color.Black
-                    )
-                    .align(Alignment.CenterHorizontally),
-                painter = painterResource(R.drawable.android_logo),
-                contentDescription = null,
-            )
-            Text(
-                text = "Ajit Horo",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(16.dp),
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Android Developer Experience",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-            )
-        }
-        Column(modifier = Modifier
-            .background(Color2)
-            .weight(1f)
-            .fillMaxSize()
-            .padding(bottom = 16.dp),
-            verticalArrangement = Arrangement.Bottom) {
-            Row(modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.Start){
-                Column {
-                    Icon(
-                        imageVector = Icons.Filled.Call,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 8.dp),
-                    )
-                    Icon(
-                        imageVector = Icons.Filled.Home,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 8.dp),
-                    )
-                }
-                Column {
-                    Text(
-                        text = "363636336363",
-                    )
-                    Text(
-                        text = "36363633636ffvvvvvvfff3",
-                    )
-                }
-            }
-//            Row(modifier = Modifier
-//                .align(Alignment.CenterHorizontally)
-//                .padding(16.dp),
-//                horizontalArrangement = Arrangement.Start){
-//                Icon(
-//                    imageVector = Icons.Filled.Home,
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .padding(end = 8.dp),
-//                )
-//                Text(
-//                    text = "363636336ffff363",
-//                )
-//            }
-
-        }
-    }
-}
-
 @Preview(
     showBackground = true, showSystemUi = true
 )
 @Composable
 fun GreetingPreview() {
     ArticleTheme {
-        BussinessCard(
-            modifier = Modifier
-                .fillMaxSize()
-        )
 //        Articles(
 //            modifier = Modifier.background(
 //                color = Color.Red
@@ -317,10 +232,10 @@ fun GreetingPreview() {
 //                )
 //        )
 
-//        Greeting(title = stringResource(R.string.text_title),
-//            desc1 = stringResource(R.string.text_desc1),
-//            desc2 = stringResource(R.string.text_desc2)
-//        )
+        Greeting(title = stringResource(R.string.text_title),
+            desc1 = stringResource(R.string.text_desc1),
+            desc2 = stringResource(R.string.text_desc2)
+        )
 
 //        FinishScreen(
 //            message1 = stringResource(R.string.text_all_task),
