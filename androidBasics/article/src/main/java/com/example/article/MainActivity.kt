@@ -27,22 +27,15 @@ import com.example.article.ui.theme.Color3
 import com.example.article.ui.theme.Color4
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ArticleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Articles(
-                        modifier = Modifier
-                            .background(
-                                color = Color.Red
-                            )
-                            .padding(innerPadding)
-                    )
-//                    Greeting(
-//                        title = "Android", modifier = Modifier.padding(innerPadding)
-//                    )
+                Scaffold { innerPadding ->
+                    innerPadding
+                    ArticleContent(modifier = Modifier.fillMaxSize())
                 }
             }
         }
@@ -50,109 +43,62 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Articles(
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = Modifier.fillMaxSize(),
-        ) {
-        Row(modifier = Modifier.weight(1f),
+fun ArticleContent(modifier: Modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
+        Row(modifier = Modifier.weight(1f).fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceEvenly) {
             Quadrant(
+                modifier = Modifier.weight(1f),
                 title = "Text composable",
                 desc = "Displays text and follows the recommended Material Design guidelines.",
-                modifier = Modifier
-                    .background(
-                        color = Color1
-                    )
-                    .weight(1f)
-                    .fillMaxSize()
-
+                color = Color1,
             )
             Quadrant(
+                modifier = Modifier.weight(1f),
                 title = "Image composable",
                 desc = "Creates a composable that lays out and draws a given Painter class object.",
-                modifier = Modifier
-                    .background(
-                        color = Color2
-                    )
-                    .weight(1f)
-                    .fillMaxSize()
+                color = Color2,
             )
         }
-        Row(modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(modifier = Modifier.weight(1f).fillMaxSize()) {
             Quadrant(
-                title = "Text composable",
-                desc = "Displays text and follows the recommended Material Design guidelines.",
-                modifier = Modifier
-                    .background(
-                        color = Color3
-                    )
-                    .weight(1f)
-                    .fillMaxSize()
+                modifier = Modifier.weight(1f),
+                title = "Image composable  3",
+                desc = "Creates a composable that lays out and draws a given Painter class object.",
+                color = Color3,
             )
             Quadrant(
+                modifier = Modifier.weight(1f),
                 title = "Image composable",
                 desc = "Creates a composable that lays out and draws a given Painter class object.",
-                modifier = Modifier
-                    .background(
-                        color = Color4
-                    )
-                    .weight(1f)
-                    .fillMaxSize()
+                color = Color4,
             )
         }
     }
 }
 
 @Composable
-fun Quadrant(title: String,
-             desc: String,
-             modifier: Modifier = Modifier) {
-        Column(
-            modifier = modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = title,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(
-                        Alignment.CenterHorizontally
-                    )
-                    .padding(bottom = 16.dp)
-            )
-            Text(
-                text = desc,
-                textAlign = TextAlign.Justify,
-                modifier = Modifier.align(
-                    Alignment.CenterHorizontally
-                )
-            )
-        }
+fun Quadrant(modifier: Modifier, title: String, desc: String, color: Color) {
+    Column(modifier = modifier.fillMaxSize().background(color = color),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = title,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = desc,
+            modifier = Modifier.padding(16.dp),
+            textAlign = TextAlign.Justify
+        )
+    }
 }
 
-@Preview(
-    showBackground = true, showSystemUi = true
-)
 @Composable
-fun GreetingPreview() {
+@Preview(showSystemUi = true)
+fun ArticleContentPreview() {
     ArticleTheme {
-//        Articles(
-//            modifier = Modifier.background(
-//                color = Color.Red
-//            )
-//        )
-//        Quadrant(
-//            title = "Title",
-//            desc = "desc",
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(
-//                    color = Color1
-//                )
-//        )
-
+        ArticleContent(modifier = Modifier)
     }
 }
