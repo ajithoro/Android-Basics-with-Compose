@@ -1,3 +1,5 @@
+### SAM Interface
+A functional interface in Kotlin is an interface that contains only one abstract method, allowing it to be instantiated using a lambda expression. This makes the code more concise and readable, as you can create instances of the interface without needing to implement the method in a separate class
 ### Definition of Functional Interfaces
 A functional interface in Kotlin is an interface that contains exactly one abstract method. This is also known as a Single Abstract Method (SAM) interface. While it can have multiple non-abstract methods, only one method can be abstract.
 ```
