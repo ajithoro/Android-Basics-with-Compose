@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -18,8 +20,16 @@ import com.horo.marsphotos.R
 import com.horo.marsphotos.ui.theme.AndroidBasicsTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier) {
-
+fun HomeScreen(
+    marsUiState: MarsUiState,
+    paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    when (marsUiState) {
+        is MarsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
+        is MarsUiState.Success -> SuccessScreen(modifier = Modifier.fillMaxSize())
+        is MarsUiState.Error -> ErrorScreen(modifier = Modifier.fillMaxSize())
+    }
 }
 
 @Composable
@@ -63,7 +73,7 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
 @Composable
 fun LoadingScreenPreview() {
     AndroidBasicsTheme {
-        LoadingScreen()
+        LoadingScreen(modifier = Modifier.fillMaxSize())
     }
 }
 
@@ -71,7 +81,7 @@ fun LoadingScreenPreview() {
 @Composable
 fun SuccessScreenPreview() {
     AndroidBasicsTheme {
-        SuccessScreen()
+        SuccessScreen(modifier = Modifier.fillMaxSize())
     }
 }
 
@@ -79,6 +89,6 @@ fun SuccessScreenPreview() {
 @Composable
 fun ErrorScreenPreview() {
     AndroidBasicsTheme {
-        ErrorScreen()
+        ErrorScreen(modifier = Modifier.fillMaxSize())
     }
 }
