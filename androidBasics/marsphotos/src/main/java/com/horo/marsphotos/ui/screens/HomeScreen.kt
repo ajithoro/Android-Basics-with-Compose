@@ -27,7 +27,11 @@ fun HomeScreen(
 ) {
     when (marsUiState) {
         is MarsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
-        is MarsUiState.Success -> SuccessScreen(modifier = Modifier.fillMaxSize())
+        is MarsUiState.Success -> SuccessScreen(
+            successText = marsUiState.photos,
+            modifier = Modifier.fillMaxSize(),
+        )
+
         is MarsUiState.Error -> ErrorScreen(modifier = Modifier.fillMaxSize())
     }
 }
@@ -42,12 +46,12 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SuccessScreen(modifier: Modifier = Modifier) {
+fun SuccessScreen(successText: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Text(text = stringResource(R.string.placeholder_success_text))
+        Text(text = successText)
     }
 }
 
@@ -64,7 +68,7 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
         )
         Text(
             modifier = Modifier.padding(16.dp),
-            text = stringResource(R.string.loading)
+            text = stringResource(R.string.failed_to_load)
         )
     }
 }
@@ -81,7 +85,10 @@ fun LoadingScreenPreview() {
 @Composable
 fun SuccessScreenPreview() {
     AndroidBasicsTheme {
-        SuccessScreen(modifier = Modifier.fillMaxSize())
+        SuccessScreen(
+            successText = stringResource(R.string.placeholder_success_text),
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
