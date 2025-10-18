@@ -26,14 +26,13 @@ class MarsViewModel : ViewModel() {
 
     fun getPhotoList() {
         viewModelScope.launch {
+            marsUiState = MarsUiState.Loading
             marsUiState = try {
                 val photoList = MarsApi.marsApiService.getPhotoList()
                 MarsUiState.Success(photos = "Total photos: ${photoList.size}")
             } catch (e: IOException) {
-                println("abc: ${e.toString()}")
                 MarsUiState.Error
             } catch (e: HttpException) {
-                println("abc: h: ${e.toString()}")
                 MarsUiState.Error
             }
         }

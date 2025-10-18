@@ -1,2 +1,0 @@
-### Official Android Developer Documentation
-
