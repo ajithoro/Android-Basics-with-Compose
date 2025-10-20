@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,7 +87,8 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
             )
             Text(
                 text = LocalContext.current.getString(affirmation.stringResId),
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.headlineSmall
             )
         }
     }
