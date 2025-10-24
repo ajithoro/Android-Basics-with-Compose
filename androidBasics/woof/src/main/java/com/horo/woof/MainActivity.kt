@@ -5,10 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -122,10 +124,10 @@ fun DogList(modifier: Modifier = Modifier) {
 @Composable
 fun DogItem(dog: Dog, modifier: Modifier = Modifier) {
     var expand by remember { mutableStateOf(false) }
-//    var color =
-//        animateColorAsState(
-//            targetValue = if (expand) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-//        )
+    val color by animateColorAsState(
+        targetValue = if (expand) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.primaryContainer
+    )
+
 
     Card(
         modifier = modifier
@@ -140,7 +142,7 @@ fun DogItem(dog: Dog, modifier: Modifier = Modifier) {
                         stiffness = Spring.StiffnessMedium
                     )
                 )
-//                .background(color = color.value)
+                .background(color = color)
         ) {
             Row(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
                 Image(
