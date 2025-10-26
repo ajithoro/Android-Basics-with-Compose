@@ -51,7 +51,14 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeroListScreen() {
-    Scaffold(topBar = { CenterAlignedTopAppBar({ Text(text = stringResource(R.string.app_name)) }) }) { paddingValues ->
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar({
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.displayLarge
+            )
+        })
+    }) { paddingValues ->
         Surface(modifier = Modifier.padding(paddingValues)) {
             HeroList(heroes = HeroesRepository.heroes)
         }
@@ -87,7 +94,7 @@ fun HeroListItem(hero: Hero, modifier: Modifier = Modifier) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(hero.nameRes),
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.displaySmall
                 )
                 Text(
                     text = stringResource(hero.descriptionRes),
