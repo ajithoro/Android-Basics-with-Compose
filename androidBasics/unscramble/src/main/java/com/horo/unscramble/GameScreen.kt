@@ -1,6 +1,8 @@
 package com.horo.unscramble
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,24 +14,32 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -41,11 +51,28 @@ import kotlin.math.roundToInt
 fun GameScreen() {
     val gameViewModel: GameViewModel = viewModel()
     val uiState by gameViewModel.uiState.collectAsState()
-    val onGuessedWordChanged: (String) -> Unit = { }
-    val submitButtonClicked = { }
-    val skipButtonClicked = { }
+    val onGuessedWordChanged: (String) -> Unit = { gameViewModel.updateGuessedWord(it) }
+    val submitButtonClicked = { gameViewModel.submitButtonClicked(uiState.guessedWord.trim()) }
+    val skipButtonClicked = { gameViewModel.skipButtonClicked() }
+    val activity = LocalActivity.current
+    val cancelButtonClicked: () -> Unit = { activity?.finish() }
+    val confirmButtonClicked = { gameViewModel.resetGame() }
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    val onDoneClicked: KeyboardActionScope.() -> Unit =
+        {
+            gameViewModel.submitButtonClicked(uiState.guessedWord.trim())
+        }
+
+    val focusManager = LocalFocusManager.current
+    val onClickOutSideKeyboard: () -> Unit = { focusManager.clearFocus() }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                onClick = onClickOutSideKeyboard
+            )
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,6 +95,7 @@ fun GameScreen() {
                 guessedWord = uiState.guessedWord,
                 onValueChanged = onGuessedWordChanged,
                 isGuessedWordWrong = uiState.isGuessedWordWrong,
+                onDoneClicked = onDoneClicked,
                 modifier = Modifier,
             )
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
@@ -99,9 +127,54 @@ fun GameScreen() {
 
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
 
-            GameStatus(score = 5, modifier = Modifier)
+            GameStatus(score = uiState.score, modifier = Modifier)
+
+            if (uiState.isGameOver) {
+                FinalScoreDialog(
+                    score = uiState.score, cancelButtonClicked = cancelButtonClicked,
+                    confirmButtonClicked = confirmButtonClicked
+                )
+            }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FinalScoreDialog(
+    score: Int,
+    cancelButtonClicked: () -> Unit,
+    confirmButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AlertDialog(
+        onDismissRequest = {},
+        dismissButton = {
+            TextButton(onClick = cancelButtonClicked) {
+                Text(
+                    text = stringResource(R.string.exit),
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = confirmButtonClicked) {
+                Text(
+                    text = stringResource(R.string.play_again)
+                )
+            }
+        },
+        modifier = modifier,
+        title = {
+            Text(
+                text = stringResource(R.string.congratulations),
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.you_scored, score)
+            )
+        },
+    )
 }
 
 @Composable
@@ -125,6 +198,7 @@ fun GameLayout(
     guessedWord: String,
     isGuessedWordWrong: Boolean,
     onValueChanged: (String) -> Unit,
+    onDoneClicked: KeyboardActionScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -180,7 +254,11 @@ fun GameLayout(
                     disabledContainerColor = MaterialTheme.colorScheme.surface,
                 ),
                 value = guessedWord,
-                onValueChange = onValueChanged,
+                onValueChange = {
+                    if (it.isNotEmpty()) {
+                        onValueChanged(it)
+                    }
+                },
                 isError = isGuessedWordWrong,
                 label = {
                     if (isGuessedWordWrong) {
@@ -192,7 +270,13 @@ fun GameLayout(
                             text = stringResource(R.string.enter_your_word)
                         )
                     }
-                }
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = onDoneClicked
+                )
             )
         }
     }
