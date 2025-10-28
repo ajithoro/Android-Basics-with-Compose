@@ -19,10 +19,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,10 +33,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.horo.unscramble.ui.theme.UnscrambleTheme
+import kotlin.math.roundToInt
 
 @Composable
 fun GameScreen() {
+    val gameViewModel: GameViewModel = viewModel()
+    val uiState by gameViewModel.uiState.collectAsState()
+    val onGuessedWordChanged: (String) -> Unit = { }
     val submitButtonClicked = { }
     val skipButtonClicked = { }
 
@@ -56,11 +63,11 @@ fun GameScreen() {
             )
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
             GameLayout(
-                currentScrambledWord = "abcd",
-                5,
-                guessedWord = "Guessed word",
-                onValueChanged = {},
-                isGuessedWordWrong = false,
+                currentScrambledWord = uiState.currentScrambledWord,
+                wordCount = uiState.wordCount,
+                guessedWord = uiState.guessedWord,
+                onValueChanged = onGuessedWordChanged,
+                isGuessedWordWrong = uiState.isGuessedWordWrong,
                 modifier = Modifier,
             )
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
@@ -69,18 +76,23 @@ fun GameScreen() {
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                Button(onClick = submitButtonClicked) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = submitButtonClicked
+                ) {
                     Text(
                         text = stringResource(R.string.submit),
-                        fontSize = 16.sp
+                        fontSize = dimensionResource(R.dimen.button_text_size).value.roundToInt().sp
                     )
                 }
 
-                OutlinedButton(onClick = skipButtonClicked) {
+                OutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = skipButtonClicked
+                ) {
                     Text(
                         text = stringResource(R.string.skip),
-                        fontSize = 16.sp
+                        fontSize = dimensionResource(R.dimen.button_text_size).value.roundToInt().sp
                     )
                 }
             }
@@ -101,7 +113,7 @@ fun GameStatus(
         Text(
             text = stringResource(R.string.score, score),
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
         )
     }
 }
@@ -135,8 +147,8 @@ fun GameLayout(
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surfaceTint)
                     .padding(
-                        horizontal = dimensionResource(R.dimen.padding_medium),
-                        vertical = dimensionResource(R.dimen.padding_small)
+                        horizontal = dimensionResource(R.dimen.padding_small),
+                        vertical = dimensionResource(R.dimen.padding_extra_small)
                     )
                     .align(Alignment.End),
                 text = stringResource(R.string.word_count, wordCount),
@@ -153,19 +165,19 @@ fun GameLayout(
 
             Text(
                 text = stringResource(R.string.instructions),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
             )
 
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.large),
+                    .fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
                 singleLine = true,
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.surface,
-                    unfocusedTextColor = MaterialTheme.colorScheme.surface,
-                    disabledTextColor = MaterialTheme.colorScheme.surface
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface,
                 ),
                 value = guessedWord,
                 onValueChange = onValueChanged,

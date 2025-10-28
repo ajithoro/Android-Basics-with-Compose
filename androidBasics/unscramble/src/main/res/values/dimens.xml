@@ -2,5 +2,7 @@
 <resources>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
-    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_extra_small">4dp</dimen>
+    <dimen name="button_text_size">16dp</dimen>
 </resources>
