@@ -60,7 +60,7 @@ class GameViewModel : ViewModel() {
         if (guessedWord.isEmpty()) {
             return
         }
-        if (guessedWord == currentPickedWord) {
+        if (guessedWord.equals(currentPickedWord, ignoreCase = true)) {
             _uiState.update {
                 it.copy(
                     currentScrambledWord = if (it.wordCount != MAX_NUMBER_OF_WORDS) getScrambleWord() else "",

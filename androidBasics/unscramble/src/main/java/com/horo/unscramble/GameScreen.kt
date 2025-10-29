@@ -211,7 +211,7 @@ fun GameLayout(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .wrapContentHeight()
                 .padding(dimensionResource(R.dimen.padding_medium)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
