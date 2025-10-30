@@ -1,5 +1,7 @@
 package com.horo.dessertclicker
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -7,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,14 +33,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.horo.dessertclicker.data.DataSource
+import com.horo.dessertclicker.model.Dessert
 import com.horo.dessertclicker.ui.theme.AndroidBasicsTheme
 
 
@@ -50,7 +60,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidBasicsTheme {
-                DessertScreen()
+                DessertScreen(DataSource.dessertList)
             }
         }
     }
@@ -88,8 +98,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DessertScreen() {
-    val onSharedClicked: () -> Unit = {}
+fun DessertScreen(dessertList: List<Dessert>) {
+    var imageRes by rememberSaveable { mutableIntStateOf(dessertList.first().imageRes) }
+    var dessertSold by rememberSaveable { mutableIntStateOf(0) }
+    var currentPrice by rememberSaveable { mutableIntStateOf(dessertList.first().price) }
+    var revenue by rememberSaveable { mutableIntStateOf(0) }
+    val intentContext = LocalContext.current
+    val onSharedClicked: () -> Unit = { shareDessertSoldInfo(intentContext, dessertSold, revenue) }
+    val onImageClick: () -> Unit = {
+        dessertSold++
+        revenue += currentPrice
+        val dessertToShow = getDessertToShow(dessertList, dessertSold)
+        imageRes = dessertToShow.imageRes
+        currentPrice = dessertToShow.price
+    }
 
     Surface(
         modifier = Modifier
@@ -115,18 +137,54 @@ fun DessertScreen() {
             }) {
             Surface(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.secondary)
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
                     .padding(paddingValues = it)
             ) {
-                DessertScreenContent(modifier = Modifier)
+                DessertScreenContent(
+                    imageRes = imageRes,
+                    bakerSold = dessertSold,
+                    revenue = revenue,
+                    onImageClick = onImageClick
+                )
             }
         }
     }
 }
 
+fun shareDessertSoldInfo(intentContext: Context, dessertSold: Int, revenue: Int) {
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(
+            Intent.EXTRA_TEXT,
+            intentContext.getString(R.string.share_text, dessertSold, revenue)
+        )
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, "Dessert sold info")
+    intentContext.startActivity(shareIntent)
+}
+
+fun getDessertToShow(dessertList: List<Dessert>, backerSold: Int): Dessert {
+    var dessertToShow = dessertList.first()
+    for (dessert in dessertList) {
+        if (backerSold >= dessert.startAmountProduction) {
+            dessertToShow = dessert
+        } else {
+            break
+        }
+    }
+
+    return dessertToShow
+}
+
 @Composable
-private fun DessertScreenContent(modifier: Modifier = Modifier) {
-    val imageRes = R.drawable.oreo
+private fun DessertScreenContent(
+    imageRes: Int,
+    bakerSold: Int,
+    revenue: Int,
+    onImageClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -146,56 +204,59 @@ private fun DessertScreenContent(modifier: Modifier = Modifier) {
                 Image(
                     modifier = Modifier
                         .size(dimensionResource(R.dimen.image_size))
-                        .align(Alignment.Center),
+                        .align(Alignment.Center)
+                        .clickable(onClick = onImageClick),
                     painter = painterResource(imageRes),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
-            BackerDetails(modifier = Modifier)
+            BackerDetails(
+                modifier = Modifier,
+                backerSold = bakerSold,
+                revenue = revenue
+            )
         }
     }
 }
 
 @Composable
-fun BackerDetails(modifier: Modifier) {
-    val backerSold = 15
-    val revenue = 348
+fun BackerDetails(backerSold: Int, revenue: Int, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .padding(dimensionResource(R.dimen.padding_medium)),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = stringResource(R.string.dessert_sold),
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Text(
                 text = backerSold.toString(),
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .padding(dimensionResource(R.dimen.padding_medium)),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = stringResource(R.string.total_revenue),
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Text(
                 text = "$$revenue",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
     }
@@ -217,7 +278,7 @@ fun DessertTopBar(onShareClicked: () -> Unit, modifier: Modifier = Modifier) {
         IconButton(onClick = onShareClicked) {
             Icon(
                 imageVector = Icons.Filled.Share,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.share),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
@@ -228,6 +289,6 @@ fun DessertTopBar(onShareClicked: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun DessertScreenPreview() {
     AndroidBasicsTheme {
-        DessertScreen()
+        DessertScreen(DataSource.dessertList)
     }
 }
