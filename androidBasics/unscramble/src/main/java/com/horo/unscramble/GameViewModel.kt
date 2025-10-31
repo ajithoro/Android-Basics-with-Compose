@@ -55,7 +55,7 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun submitButtonClicked(word: String) {
+    fun checkGuessedWord(word: String) {
         val guessedWord = word.trim()
         if (guessedWord.isEmpty()) {
             return
@@ -80,7 +80,7 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun skipButtonClicked() {
+    fun skipGuessedWord() {
         _uiState.update {
             it.copy(
                 currentScrambledWord = getScrambleWord(),

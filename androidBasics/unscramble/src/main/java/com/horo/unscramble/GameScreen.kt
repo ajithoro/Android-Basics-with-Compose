@@ -48,19 +48,18 @@ import com.horo.unscramble.ui.theme.UnscrambleTheme
 import kotlin.math.roundToInt
 
 @Composable
-fun GameScreen() {
-    val gameViewModel: GameViewModel = viewModel()
+fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
     val uiState by gameViewModel.uiState.collectAsState()
     val onGuessedWordChanged: (String) -> Unit = { gameViewModel.updateGuessedWord(it) }
-    val submitButtonClicked = { gameViewModel.submitButtonClicked(uiState.guessedWord.trim()) }
-    val skipButtonClicked = { gameViewModel.skipButtonClicked() }
+    val submitButtonClicked = { gameViewModel.checkGuessedWord(uiState.guessedWord.trim()) }
+    val skipButtonClicked = { gameViewModel.skipGuessedWord() }
     val activity = LocalActivity.current
     val cancelButtonClicked: () -> Unit = { activity?.finish() }
     val confirmButtonClicked = { gameViewModel.resetGame() }
 
     val onDoneClicked: KeyboardActionScope.() -> Unit =
         {
-            gameViewModel.submitButtonClicked(uiState.guessedWord.trim())
+            gameViewModel.checkGuessedWord(uiState.guessedWord.trim())
         }
 
     val focusManager = LocalFocusManager.current

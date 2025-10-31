@@ -1,5 +1,6 @@
 package com.horo.dessertclicker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -151,17 +152,20 @@ fun DessertScreen(dessertList: List<Dessert>) {
     }
 }
 
+@SuppressLint("QueryPermissionsNeeded")
 fun shareDessertSoldInfo(intentContext: Context, dessertSold: Int, revenue: Int) {
     val sendIntent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(
             Intent.EXTRA_TEXT,
-            intentContext.getString(R.string.share_text, dessertSold, revenue)
+            intentContext.resources.getString(R.string.share_text, dessertSold, revenue)
         )
         type = "text/plain"
     }
     val shareIntent = Intent.createChooser(sendIntent, "Dessert sold info")
-    intentContext.startActivity(shareIntent)
+    if (sendIntent.resolveActivity(intentContext.packageManager) != null) {
+        intentContext.startActivity(shareIntent)
+    }
 }
 
 fun getDessertToShow(dessertList: List<Dessert>, backerSold: Int): Dessert {
