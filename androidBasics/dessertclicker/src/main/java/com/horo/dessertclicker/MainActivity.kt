@@ -34,10 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -47,8 +44,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.horo.dessertclicker.data.DataSource
-import com.horo.dessertclicker.model.Dessert
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.horo.dessertclicker.ui.theme.AndroidBasicsTheme
 
 
@@ -61,7 +57,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidBasicsTheme {
-                DessertScreen(DataSource.dessertList)
+                DessertScreen()
             }
         }
     }
@@ -99,19 +95,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DessertScreen(dessertList: List<Dessert>) {
-    var imageRes by rememberSaveable { mutableIntStateOf(dessertList.first().imageRes) }
-    var dessertSold by rememberSaveable { mutableIntStateOf(0) }
-    var currentPrice by rememberSaveable { mutableIntStateOf(dessertList.first().price) }
-    var revenue by rememberSaveable { mutableIntStateOf(0) }
+fun DessertScreen(viewModel: DessertViewModel = viewModel()) {
+    val uiState = viewModel.uiState.collectAsState()
+    val imageRes = uiState.value.imageRes
+    val dessertSold = uiState.value.dessertSold
+    val revenue = uiState.value.revenue
     val intentContext = LocalContext.current
     val onSharedClicked: () -> Unit = { shareDessertSoldInfo(intentContext, dessertSold, revenue) }
     val onImageClick: () -> Unit = {
-        dessertSold++
-        revenue += currentPrice
-        val dessertToShow = getDessertToShow(dessertList, dessertSold)
-        imageRes = dessertToShow.imageRes
-        currentPrice = dessertToShow.price
+        viewModel.onDessertClick()
     }
 
     Surface(
@@ -158,27 +150,14 @@ fun shareDessertSoldInfo(intentContext: Context, dessertSold: Int, revenue: Int)
         action = Intent.ACTION_SEND
         putExtra(
             Intent.EXTRA_TEXT,
-            intentContext.resources.getString(R.string.share_text, dessertSold, revenue)
+            intentContext.getString(R.string.share_text, dessertSold, revenue)
         )
         type = "text/plain"
     }
     val shareIntent = Intent.createChooser(sendIntent, "Dessert sold info")
-    if (sendIntent.resolveActivity(intentContext.packageManager) != null) {
+    if (shareIntent.resolveActivity(intentContext.packageManager) != null) {
         intentContext.startActivity(shareIntent)
     }
-}
-
-fun getDessertToShow(dessertList: List<Dessert>, backerSold: Int): Dessert {
-    var dessertToShow = dessertList.first()
-    for (dessert in dessertList) {
-        if (backerSold >= dessert.startAmountProduction) {
-            dessertToShow = dessert
-        } else {
-            break
-        }
-    }
-
-    return dessertToShow
 }
 
 @Composable
@@ -293,6 +272,6 @@ fun DessertTopBar(onShareClicked: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun DessertScreenPreview() {
     AndroidBasicsTheme {
-        DessertScreen(DataSource.dessertList)
+        DessertScreen()
     }
 }
