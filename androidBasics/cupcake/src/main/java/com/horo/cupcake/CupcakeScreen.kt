@@ -62,13 +62,25 @@ fun CupcakeApp() {
                 modifier = Modifier
             ) {
                 composable(route = CupcakeScreen.Start.name) {
-                    StartOrderScreen()
+                    StartOrderScreen(
+                        buttonList = listOf(),
+                        onButtonClick = {},
+                        modifier = Modifier
+                    )
                 }
                 composable(route = CupcakeScreen.Flavor.name) {
-                    SelectOptionScreen()
+                    SelectOptionScreen(
+                        listOf("Option 1", "Options 2", "Option 3"),
+                        optionOnClick = {},
+                        selectedIndex = -1,
+                    )
                 }
                 composable(route = CupcakeScreen.Pickup.name) {
-                    SelectOptionScreen()
+                    SelectOptionScreen(
+                        listOf("Option 1", "Options 2", "Option 3"),
+                        optionOnClick = {},
+                        selectedIndex = -1,
+                    )
                 }
                 composable(route = CupcakeScreen.Summary.name) {
                     SummaryScreen()
