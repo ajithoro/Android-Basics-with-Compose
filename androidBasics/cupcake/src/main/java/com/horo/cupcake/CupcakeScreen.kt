@@ -83,7 +83,11 @@ fun CupcakeApp() {
                     )
                 }
                 composable(route = CupcakeScreen.Summary.name) {
-                    SummaryScreen()
+                    SummaryScreen(
+                        listOf(Pair("QUANTITY", "1 cupcake"),
+                            Pair("FLAVOR", "Coffee"),
+                            Pair("PICKUP DATE", "Sun Nov 9"))
+                    )
                 }
             }
         }
