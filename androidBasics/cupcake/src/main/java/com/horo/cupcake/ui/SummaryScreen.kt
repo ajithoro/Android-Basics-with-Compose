@@ -104,7 +104,7 @@ fun SummaryScreenPreview() {
             ),
             onSendClick = { },
             onCancelClick = { },
-            subtotal = "",
+            subtotal = "300",
         )
     }
 }

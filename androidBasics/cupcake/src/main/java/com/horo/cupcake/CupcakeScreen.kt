@@ -73,6 +73,9 @@ fun CupcakeApp() {
                         listOf("Option 1", "Options 2", "Option 3"),
                         optionOnClick = {},
                         selectedIndex = -1,
+                        onCancelClick = {},
+                        onNextClick = {},
+                        subTotal = "250",
                     )
                 }
                 composable(route = CupcakeScreen.Pickup.name) {
@@ -80,6 +83,9 @@ fun CupcakeApp() {
                         listOf("Option 1", "Options 2", "Option 3"),
                         optionOnClick = {},
                         selectedIndex = -1,
+                        onCancelClick = {},
+                        onNextClick = {},
+                        subTotal = "250",
                     )
                 }
                 composable(route = CupcakeScreen.Summary.name) {
