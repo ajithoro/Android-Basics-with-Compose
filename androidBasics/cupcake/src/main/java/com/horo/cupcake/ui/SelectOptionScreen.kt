@@ -14,6 +14,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -26,12 +30,16 @@ import com.horo.cupcake.ui.theme.CupcakeTheme
 fun SelectOptionScreen(
     options: List<String>,
     optionOnClick: (String) -> Unit,
-    selectedIndex: Int,
     subTotal: String,
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+    var selectedIndex by remember { mutableIntStateOf(-1) }
+
+    var isNextEnabled = selectedIndex in 0..options.lastIndex
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -44,7 +52,9 @@ fun SelectOptionScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .clickable(
-                            onClick = { optionOnClick(item) }
+                            onClick = {
+                                selectedIndex = index
+                                optionOnClick(item) }
                         )) {
                     RadioButton(
                         modifier = Modifier,
@@ -84,7 +94,8 @@ fun SelectOptionScreen(
             }
             Button(
                 onClick = onNextClick,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                enabled = isNextEnabled
             ) {
                 Text(
                     text = stringResource(R.string.next)
@@ -101,7 +112,6 @@ fun SelectOptionScreenPreview() {
         SelectOptionScreen(
             listOf("Option 1", "Options 2", "Option 3"),
             optionOnClick = {},
-            selectedIndex = -1,
             subTotal = "250",
             onCancelClick = {},
             onNextClick = {},

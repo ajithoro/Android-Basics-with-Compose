@@ -46,6 +46,18 @@ fun CupcakeApp() {
     val onNavigationUpButtonClick: () -> Unit = {
         navController.navigateUp()
     }
+    val startScreenButtonList = listOf(
+        Pair(stringResource(R.string.one_cupcake), 1),
+        Pair(stringResource(R.string.six_cupcakes), 6),
+        Pair(stringResource(R.string.twelve_cupcakes), 12)
+    )
+    val flavorList = listOf(
+        stringResource(R.string.vanilla),
+        stringResource(R.string.chocolate),
+        stringResource(R.string.red_velvet),
+        stringResource(R.string.salted_caramel),
+        stringResource(R.string.coffee)
+    )
 
     Scaffold(topBar = {
         CupcakeTopAppbar(
@@ -63,16 +75,15 @@ fun CupcakeApp() {
             ) {
                 composable(route = CupcakeScreen.Start.name) {
                     StartOrderScreen(
-                        buttonList = listOf(),
+                        buttonList = startScreenButtonList,
                         onButtonClick = {},
                         modifier = Modifier
                     )
                 }
                 composable(route = CupcakeScreen.Flavor.name) {
                     SelectOptionScreen(
-                        listOf("Option 1", "Options 2", "Option 3"),
+                        options = flavorList,
                         optionOnClick = {},
-                        selectedIndex = -1,
                         onCancelClick = {},
                         onNextClick = {},
                         subTotal = "250",
@@ -82,7 +93,6 @@ fun CupcakeApp() {
                     SelectOptionScreen(
                         listOf("Option 1", "Options 2", "Option 3"),
                         optionOnClick = {},
-                        selectedIndex = -1,
                         onCancelClick = {},
                         onNextClick = {},
                         subTotal = "250",
@@ -91,9 +101,9 @@ fun CupcakeApp() {
                 composable(route = CupcakeScreen.Summary.name) {
                     SummaryScreen(
                         listOf(
-                            Pair("QUANTITY", "1 cupcake"),
-                            Pair("FLAVOR", "Coffee"),
-                            Pair("PICKUP DATE", "Sun Nov 9")
+                            Pair(stringResource(R.string.quantity), "1 cupcake"),
+                            Pair(stringResource(R.string.flavor), "Coffee"),
+                            Pair(stringResource(R.string.pickup_date), "Sun Nov 9")
                         ),
                         onSendClick = { },
                         onCancelClick = { },
