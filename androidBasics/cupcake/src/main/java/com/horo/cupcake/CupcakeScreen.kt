@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -36,7 +37,7 @@ enum class CupcakeScreen(@StringRes val titleRes: Int) {
 }
 
 @Composable
-fun CupcakeApp() {
+fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = CupcakeScreen.valueOf(
@@ -59,6 +60,28 @@ fun CupcakeApp() {
         stringResource(R.string.coffee)
     )
 
+    val onButtonClickInStartScreen: (Int) -> Unit = {
+        viewModel.updateQuantity(it)
+        navController.navigate(CupcakeScreen.Flavor.name)
+    }
+    val onFlavorClick: (String) -> Unit = {
+        viewModel.updateFlavor(it)
+    }
+    val onFlavorCancelClick: () -> Unit = {
+        navController.navigateUp()
+    }
+    val onFlavorNextClick: () -> Unit = {
+        navController.navigate(CupcakeScreen.Pickup.name)
+    }
+    val onPickupDateClick: (String) -> Unit = {
+        viewModel.updatePickUpDate(it)
+    }
+    val onPickupDateCancelClick: () -> Unit = {
+        navController.navigateUp()
+    }
+    val onPickupDateNextClick: () -> Unit = {
+        navController.navigate(CupcakeScreen.Summary.name)
+    }
     Scaffold(topBar = {
         CupcakeTopAppbar(
             currentScreen,
@@ -76,25 +99,25 @@ fun CupcakeApp() {
                 composable(route = CupcakeScreen.Start.name) {
                     StartOrderScreen(
                         buttonList = startScreenButtonList,
-                        onButtonClick = {},
+                        onButtonClick = onButtonClickInStartScreen,
                         modifier = Modifier
                     )
                 }
                 composable(route = CupcakeScreen.Flavor.name) {
                     SelectOptionScreen(
                         options = flavorList,
-                        optionOnClick = {},
-                        onCancelClick = {},
-                        onNextClick = {},
+                        optionOnClick = onFlavorClick,
+                        onCancelClick = onFlavorCancelClick,
+                        onNextClick = onFlavorNextClick,
                         subTotal = "250",
                     )
                 }
                 composable(route = CupcakeScreen.Pickup.name) {
                     SelectOptionScreen(
                         listOf("Option 1", "Options 2", "Option 3"),
-                        optionOnClick = {},
-                        onCancelClick = {},
-                        onNextClick = {},
+                        optionOnClick = onPickupDateClick,
+                        onCancelClick = onPickupDateCancelClick,
+                        onNextClick = onPickupDateNextClick,
                         subTotal = "250",
                     )
                 }

@@ -54,12 +54,14 @@ fun SelectOptionScreen(
                         .clickable(
                             onClick = {
                                 selectedIndex = index
-                                optionOnClick(item) }
+                                optionOnClick(item)
+                            }
                         )) {
                     RadioButton(
                         modifier = Modifier,
                         selected = selectedIndex == index,
                         onClick = {
+                            selectedIndex = index
                             optionOnClick(item)
                         },
                     )
