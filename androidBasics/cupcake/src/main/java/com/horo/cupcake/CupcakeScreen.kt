@@ -15,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,6 +40,7 @@ enum class CupcakeScreen(@StringRes val titleRes: Int) {
 
 @Composable
 fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
+    val uiState = viewModel.uiState.collectAsState()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = CupcakeScreen.valueOf(
@@ -60,6 +63,16 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
         stringResource(R.string.coffee)
     )
 
+    val numberOfCupcakes = pluralStringResource(
+        R.plurals.cupcakes, uiState.value.quantity,
+        uiState.value.quantity
+    )
+
+    val summaryItemList = listOf(
+        Pair(stringResource(R.string.quantity), numberOfCupcakes),
+        Pair(stringResource(R.string.flavor), uiState.value.flavor),
+        Pair(stringResource(R.string.pickup_date), uiState.value.pickUpDate)
+    )
     val onButtonClickInStartScreen: (Int) -> Unit = {
         viewModel.updateQuantity(it)
         navController.navigate(CupcakeScreen.Flavor.name)
@@ -81,6 +94,13 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
     }
     val onPickupDateNextClick: () -> Unit = {
         navController.navigate(CupcakeScreen.Summary.name)
+    }
+    val onSendClickOnSummaryScreen: () -> Unit = {
+
+    }
+    val onCancelClickOnSummaryScreen: () -> Unit = {
+        viewModel.resetOrder()
+        navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
     }
     Scaffold(topBar = {
         CupcakeTopAppbar(
@@ -109,28 +129,33 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
                         optionOnClick = onFlavorClick,
                         onCancelClick = onFlavorCancelClick,
                         onNextClick = onFlavorNextClick,
-                        subTotal = "250",
+                        subTotal = stringResource(
+                            R.string.subtotal_price,
+                            uiState.value.subTotal
+                        ),
                     )
                 }
                 composable(route = CupcakeScreen.Pickup.name) {
                     SelectOptionScreen(
-                        listOf("Option 1", "Options 2", "Option 3"),
+                        options = uiState.value.pickUpOptionList,
                         optionOnClick = onPickupDateClick,
                         onCancelClick = onPickupDateCancelClick,
                         onNextClick = onPickupDateNextClick,
-                        subTotal = "250",
+                        subTotal = stringResource(
+                            R.string.subtotal_price,
+                            uiState.value.subTotal
+                        ),
                     )
                 }
                 composable(route = CupcakeScreen.Summary.name) {
                     SummaryScreen(
-                        listOf(
-                            Pair(stringResource(R.string.quantity), "1 cupcake"),
-                            Pair(stringResource(R.string.flavor), "Coffee"),
-                            Pair(stringResource(R.string.pickup_date), "Sun Nov 9")
+                        summaryList = summaryItemList,
+                        onSendClick = onSendClickOnSummaryScreen,
+                        onCancelClick = onCancelClickOnSummaryScreen,
+                        subtotal = stringResource(
+                            R.string.subtotal_price,
+                            uiState.value.subTotal
                         ),
-                        onSendClick = { },
-                        onCancelClick = { },
-                        subtotal = "",
                     )
                 }
             }
