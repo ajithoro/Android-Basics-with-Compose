@@ -1,11 +1,13 @@
 package com.horo.cupcake.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,12 +18,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.horo.cupcake.R
 import com.horo.cupcake.ui.theme.CupcakeTheme
 
 @Composable
 fun StartOrderScreen(
-    buttonList: List<Pair<String, Int>>,
+    buttonList: List<Pair<Int, Int>>,
     onButtonClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,19 +61,31 @@ fun StartOrderScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             for (item in buttonList) {
-                Button(
-                    onClick = { onButtonClick(item.second) },
-                    modifier = Modifier
+                QuantityButton(
+                    item.first,
+                    { onButtonClick(item.second) },
+                    Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(R.dimen.padding_medium))
-                ) {
-                    Text(
-                        text = item.first,
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                }
+                        .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun QuantityButton(
+    @StringRes stringRes: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.widthIn(250.dp)
+    ) {
+        Text(
+            text = stringResource(stringRes),
+        )
     }
 }
 
@@ -78,13 +93,5 @@ fun StartOrderScreen(
 @Composable
 fun StartOrderScreenPreview() {
     CupcakeTheme {
-        StartOrderScreen(
-            buttonList = listOf(
-                Pair("One Cupcake", 1), Pair(
-                    "Six Cupcake", 6
-                ), Pair("Twelve Cupcake", 12)
-            ),
-            onButtonClick = {}
-        )
     }
 }

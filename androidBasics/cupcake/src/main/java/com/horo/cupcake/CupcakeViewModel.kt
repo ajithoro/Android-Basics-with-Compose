@@ -27,7 +27,7 @@ class CupcakeViewModel : ViewModel() {
         _uiState.update {
             it.copy(
                 quantity = quantity,
-                subTotal = calculatePrice(quantity)
+                subTotal = calculatePrice(quantity = quantity)
             )
         }
     }
@@ -36,14 +36,17 @@ class CupcakeViewModel : ViewModel() {
         _uiState.update {
             it.copy(
                 pickUpDate = pickUpDate,
-                subTotal = calculatePrice(uiState.value.quantity, pickUpDate = pickUpDate)
+                subTotal = calculatePrice(pickUpDate = pickUpDate)
             )
         }
     }
 
-    fun calculatePrice(quantity: Int, pickUpDate: String = uiState.value.pickUpDate): String {
+    fun calculatePrice(
+        quantity: Int = _uiState.value.quantity,
+        pickUpDate: String = _uiState.value.pickUpDate,
+    ): String {
         var subtotal = quantity * PRICE_PER_CUPCAKE
-        if (getPickUpOptions()[0] == uiState.value.pickUpDate) {
+        if (getPickUpOptions()[0] == pickUpDate) {
             subtotal += PRICE_SAME_DAY_PICK_UP
         }
 

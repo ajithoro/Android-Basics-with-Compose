@@ -14,10 +14,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -29,6 +25,7 @@ import com.horo.cupcake.ui.theme.CupcakeTheme
 @Composable
 fun SelectOptionScreen(
     options: List<String>,
+    selectedOption: String,
     optionOnClick: (String) -> Unit,
     subTotal: String,
     onCancelClick: () -> Unit,
@@ -36,9 +33,8 @@ fun SelectOptionScreen(
     modifier: Modifier = Modifier,
 ) {
 
-    var selectedIndex by remember { mutableIntStateOf(-1) }
-
-    var isNextEnabled = selectedIndex in 0..options.lastIndex
+    var selectedIndex = options.indexOf(selectedOption)
+    val isNextEnabled = selectedIndex in 0..options.lastIndex
 
     Column(
         modifier = modifier
@@ -113,6 +109,7 @@ fun SelectOptionScreenPreview() {
     CupcakeTheme {
         SelectOptionScreen(
             listOf("Option 1", "Options 2", "Option 3"),
+            selectedOption = "",
             optionOnClick = {},
             subTotal = "250",
             onCancelClick = {},
