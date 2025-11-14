@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class CupcakeViewModel : ViewModel() {
-    private var _uiState = MutableStateFlow(CupcakeUiState(pickUpOptionList = getPickUpOptions()))
+    private val _uiState = MutableStateFlow(CupcakeUiState(pickUpOptionList = getPickUpOptions()))
     val uiState = _uiState.asStateFlow()
 
     fun updateFlavor(flavor: String) {

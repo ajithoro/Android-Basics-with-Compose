@@ -4,9 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -29,26 +31,27 @@ fun StartOrderScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium)),
+        modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
             Image(
                 painter = painterResource(R.drawable.cupcake),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.width(dimensionResource(R.dimen.image_width))
             )
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
             Text(
                 text = stringResource(R.string.order_cupcakes),
                 style = MaterialTheme.typography.headlineSmall
             )
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
         }
 
         Column(
@@ -66,7 +69,6 @@ fun StartOrderScreen(
                     { onButtonClick(item.second) },
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
                 )
             }
         }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.horo.cupcake.R
+import com.horo.cupcake.ui.components.FormatedPriceLabel
 import com.horo.cupcake.ui.theme.CupcakeTheme
 
 @Composable
@@ -37,9 +37,7 @@ fun SelectOptionScreen(
     val isNextEnabled = selectedIndex in 0..options.lastIndex
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium)),
+        modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
@@ -63,17 +61,16 @@ fun SelectOptionScreen(
                     )
                     Text(
                         text = item,
-                        style = MaterialTheme.typography.headlineSmall
                     )
                 }
             }
             HorizontalDivider(
                 thickness = dimensionResource(R.dimen.divider_thickness)
             )
-            Text(
-                text = stringResource(R.string.subtotal_price, subTotal),
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.align(Alignment.End)
+            FormatedPriceLabel(
+                subTotal, Modifier
+                    .align(Alignment.End)
+                    .padding(vertical = dimensionResource(R.dimen.padding_medium))
             )
         }
         Row(

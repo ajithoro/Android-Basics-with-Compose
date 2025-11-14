@@ -2,12 +2,10 @@ package com.horo.cupcake.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.horo.cupcake.R
+import com.horo.cupcake.ui.components.FormatedPriceLabel
 import com.horo.cupcake.ui.theme.CupcakeTheme
 
 @Composable
@@ -31,19 +30,15 @@ fun SummaryScreen(
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium)),
     ) {
         Column {
             for (item in summaryList) {
                 Column {
                     Text(
                         text = item.first,
-                        style = MaterialTheme.typography.headlineMedium
                     )
                     Text(
                         text = item.second,
-                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     HorizontalDivider(
@@ -52,18 +47,15 @@ fun SummaryScreen(
                     )
                 }
             }
-            Text(
-                modifier = Modifier
+            FormatedPriceLabel(
+                subtotal, Modifier
                     .align(Alignment.End)
                     .padding(
                         vertical = dimensionResource(
                             R.dimen.padding_medium
                         )
-                    ),
-                text = stringResource(R.string.subtotal_price, subtotal),
-                style = MaterialTheme.typography.headlineMedium
+                    )
             )
-
 
         }
         Column(

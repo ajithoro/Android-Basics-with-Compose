@@ -5,8 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,16 +26,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.horo.cupcake.data.DataSource.flavorList
 import com.horo.cupcake.data.DataSource.quantityList
+import com.horo.cupcake.model.CupcakeUiState
 import com.horo.cupcake.ui.SelectOptionScreen
 import com.horo.cupcake.ui.StartOrderScreen
 import com.horo.cupcake.ui.SummaryScreen
@@ -48,9 +54,11 @@ enum class CupcakeScreen(@StringRes val titleRes: Int) {
 }
 
 @Composable
-fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
-    val uiState = viewModel.uiState.collectAsState()
-    val navController = rememberNavController()
+fun CupcakeApp(
+    viewModel: CupcakeViewModel = viewModel(),
+    navController: NavHostController = rememberNavController(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = CupcakeScreen.valueOf(
         backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
@@ -66,14 +74,14 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
     }
 
     val numberOfCupcakes = pluralStringResource(
-        R.plurals.cupcakes, uiState.value.quantity,
-        uiState.value.quantity
+        R.plurals.cupcakes, uiState.quantity,
+        uiState.quantity
     )
 
     val summaryItemList = listOf(
         Pair(stringResource(R.string.quantity), numberOfCupcakes),
-        Pair(stringResource(R.string.flavor), uiState.value.flavor),
-        Pair(stringResource(R.string.pickup_date), uiState.value.pickUpDate)
+        Pair(stringResource(R.string.flavor), uiState.flavor),
+        Pair(stringResource(R.string.pickup_date), uiState.pickUpDate)
     )
     val cancelAndReset: () -> Unit = {
         viewModel.resetOrder()
@@ -103,7 +111,7 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
     }
     val context = LocalContext.current
     val onSendClickOnSummaryScreen: () -> Unit = {
-        shareOrderSummary(viewModel, context)
+        shareOrderSummary(uiState, context)
     }
     val onCancelClickOnSummaryScreen: () -> Unit = {
         cancelAndReset()
@@ -121,32 +129,40 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
                 navController = navController,
                 startDestination = CupcakeScreen.Start.name,
                 modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
                 composable(route = CupcakeScreen.Start.name) {
                     StartOrderScreen(
                         buttonList = quantityList,
                         onButtonClick = onButtonClickInStartScreen,
                         modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(R.dimen.padding_medium))
                     )
                 }
                 composable(route = CupcakeScreen.Flavor.name) {
                     SelectOptionScreen(
                         options = flavorList.map { context.getString(it) },
-                        selectedOption = uiState.value.flavor,
+                        selectedOption = uiState.flavor,
                         optionOnClick = onFlavorClick,
                         onCancelClick = onFlavorCancelClick,
                         onNextClick = onFlavorNextClick,
-                        subTotal = uiState.value.subTotal,
+                        subTotal = uiState.subTotal,
+                        modifier = Modifier.fillMaxHeight()
+                            .padding(dimensionResource(R.dimen.padding_medium))
                     )
                 }
                 composable(route = CupcakeScreen.Pickup.name) {
                     SelectOptionScreen(
-                        options = uiState.value.pickUpOptionList,
-                        selectedOption = uiState.value.pickUpDate,
+                        options = uiState.pickUpOptionList,
+                        selectedOption = uiState.pickUpDate,
                         optionOnClick = onPickupDateClick,
                         onCancelClick = onPickupDateCancelClick,
                         onNextClick = onPickupDateNextClick,
-                        subTotal = uiState.value.subTotal,
+                        subTotal = uiState.subTotal,
+                        modifier = Modifier.fillMaxHeight()
+                            .padding(dimensionResource(R.dimen.padding_medium))
                     )
                 }
                 composable(route = CupcakeScreen.Summary.name) {
@@ -154,7 +170,9 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
                         summaryList = summaryItemList,
                         onSendClick = onSendClickOnSummaryScreen,
                         onCancelClick = onCancelClickOnSummaryScreen,
-                        subtotal = uiState.value.subTotal,
+                        subtotal = uiState.subTotal,
+                        modifier = Modifier.fillMaxHeight()
+                            .padding(dimensionResource(R.dimen.padding_medium))
                     )
                 }
             }
@@ -163,12 +181,12 @@ fun CupcakeApp(viewModel: CupcakeViewModel = viewModel()) {
 }
 
 fun shareOrderSummary(
-    viewModel: CupcakeViewModel,
+    uiState: CupcakeUiState,
     context: Context,
 ) {
-    val uiState = viewModel.uiState.value
     val sendIntent = Intent().apply {
         action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_SUBJECT, context.resources.getString(R.string.new_cupcake_order))
         putExtra(
             Intent.EXTRA_TEXT, context.getString(
                 R.string.order_details, uiState.quantity.toString(),
@@ -182,7 +200,7 @@ fun shareOrderSummary(
 
     val chooseIntent = Intent.createChooser(
         sendIntent,
-        context.resources.getString(R.string.order_summary)
+        context.resources.getString(R.string.new_cupcake_order)
     )
     try {
         context.startActivity(chooseIntent)
@@ -197,15 +215,13 @@ fun CupcakeTopAppbar(
     cupcakeScreen: CupcakeScreen,
     canNavigationBack: Boolean,
     onNavigationUpButtonClick: () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
-        modifier = modifier.background(
-            MaterialTheme.colorScheme.primaryContainer
-        ),
+        modifier = modifier,
         title = {
             Text(
                 text = stringResource(cupcakeScreen.titleRes),
@@ -216,7 +232,7 @@ fun CupcakeTopAppbar(
                 IconButton(onClick = onNavigationUpButtonClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.back_button)
                     )
                 }
             }
@@ -228,6 +244,6 @@ fun CupcakeTopAppbar(
 @Composable
 fun CupcakeAppPreview() {
     CupcakeTheme {
-        CupcakeApp()
+        CupcakeApp(navController = rememberNavController())
     }
 }
