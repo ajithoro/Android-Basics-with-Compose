@@ -74,15 +74,12 @@ class CupcakeOrderScreenTest {
     fun selectOptionScreen_optionSelected_NextButtonEnabled() {
         val flavorList = listOf("Vanilla", "Chocolate", "Hazelnut", "Cookie", "Mango")
         val subTotal = "$1300"
-        var selectedOption = ""
 
-        TODO("Refactor this failing test")
         composeTestRule.setContent {
             SelectOptionScreen(
                 options = flavorList,
-                selectedOption = selectedOption,
+                selectedOption = "",
                 optionOnClick = {
-                    selectedOption = it
                 },
                 subTotal = subTotal,
                 onCancelClick = {},
