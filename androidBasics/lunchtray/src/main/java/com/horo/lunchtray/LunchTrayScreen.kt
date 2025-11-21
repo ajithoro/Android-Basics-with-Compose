@@ -85,16 +85,63 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
                     )
                 }
                 composable(route = LunchTrayScreen.ChooseEntree.name) {
-                    ChooseEntreeScreen()
+                    ChooseEntreeScreen(
+                        onCancelClick = {
+                            navController.popBackStack(
+                                LunchTrayScreen.StartOrder.name,
+                                false
+                            )
+                        },
+                        onNextClick = {
+                            navController.navigate(LunchTrayScreen.ChooseSideDish.name)
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 composable(route = LunchTrayScreen.ChooseSideDish.name) {
-                    ChooseSideDishScreen()
+                    ChooseSideDishScreen(
+                        onCancelClick = {
+                            navController.popBackStack(
+                                LunchTrayScreen.StartOrder.name,
+                                false
+                            )
+                        },
+                        onNextClick = {
+                            navController.navigate(LunchTrayScreen.ChooseAccompaniment.name)
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 composable(route = LunchTrayScreen.ChooseAccompaniment.name) {
-                    ChooseAccompanimentScreen()
+                    ChooseAccompanimentScreen(
+                        onCancelClick = {
+                            navController.popBackStack(
+                                LunchTrayScreen.StartOrder.name,
+                                false
+                            )
+                        },
+                        onNextClick = {
+                            navController.navigate(LunchTrayScreen.OrderCheckout.name)
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 composable(route = LunchTrayScreen.OrderCheckout.name) {
-                    OrderCheckoutScreen()
+                    OrderCheckoutScreen(
+                        onCancelClick = {
+                            navController.popBackStack(
+                                LunchTrayScreen.StartOrder.name,
+                                false
+                            )
+                        },
+                        onSubmitClick = {
+                            navController.popBackStack(
+                                LunchTrayScreen.StartOrder.name,
+                                false
+                            )
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }
