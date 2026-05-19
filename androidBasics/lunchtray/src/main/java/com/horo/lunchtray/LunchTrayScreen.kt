@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.horo.lunchtray.data.DataSource
 import com.horo.lunchtray.ui.ChooseAccompanimentScreen
 import com.horo.lunchtray.ui.ChooseEntreeScreen
 import com.horo.lunchtray.ui.ChooseSideDishScreen
@@ -95,7 +96,8 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
                         onNextClick = {
                             navController.navigate(LunchTrayScreen.ChooseSideDish.name)
                         },
-                        modifier = Modifier.fillMaxSize()
+                        optionList = DataSource.entreeMenuItems,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 composable(route = LunchTrayScreen.ChooseSideDish.name) {
@@ -109,7 +111,8 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
                         onNextClick = {
                             navController.navigate(LunchTrayScreen.ChooseAccompaniment.name)
                         },
-                        modifier = Modifier.fillMaxSize()
+                        optionList = DataSource.sideDishMenuItems,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 composable(route = LunchTrayScreen.ChooseAccompaniment.name) {
@@ -123,7 +126,8 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
                         onNextClick = {
                             navController.navigate(LunchTrayScreen.OrderCheckout.name)
                         },
-                        modifier = Modifier.fillMaxSize()
+                        optionList = DataSource.accompanimentMenuItems,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 composable(route = LunchTrayScreen.OrderCheckout.name) {
@@ -140,7 +144,7 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
                                 false
                             )
                         },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }

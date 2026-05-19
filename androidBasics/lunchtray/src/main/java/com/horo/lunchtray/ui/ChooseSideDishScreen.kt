@@ -15,37 +15,50 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.horo.lunchtray.R
+import com.horo.lunchtray.data.DataSource
+import com.horo.lunchtray.model.MenuItem
 
 @Composable
 fun ChooseSideDishScreen(
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
+    optionList: List<MenuItem.SideDishItem>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.spacedBy(
-                dimensionResource(
-                    R.dimen.padding_medium
+        BaseMenuScreen(
+            optionList = optionList, modifier = Modifier.padding(
+                end = dimensionResource(
+                    R
+                        .dimen.padding_medium
                 )
             )
-        ) {
-            OutlinedButton(
-                onClick = onCancelClick,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(text = stringResource(R.string.cancel).uppercase())
-            }
-            Button(
-                onClick = onNextClick,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.next).uppercase()
+        )
+        Column(modifier = Modifier) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_medium)),
+                horizontalArrangement = Arrangement.spacedBy(
+                    dimensionResource(
+                        R.dimen.padding_medium
+                    )
                 )
+            ) {
+                OutlinedButton(
+                    onClick = onCancelClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = stringResource(R.string.cancel).uppercase())
+                }
+                Button(
+                    onClick = onNextClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(R.string.next).uppercase()
+                    )
+                }
             }
         }
     }
@@ -57,6 +70,7 @@ fun ChooseSideDishScreenPreview() {
     ChooseSideDishScreen(
         onCancelClick = {},
         onNextClick = {},
+        optionList = DataSource.sideDishMenuItems,
         modifier = Modifier.fillMaxSize(),
     )
 }

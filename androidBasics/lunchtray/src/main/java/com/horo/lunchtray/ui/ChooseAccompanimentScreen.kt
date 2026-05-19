@@ -15,37 +15,50 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.horo.lunchtray.R
+import com.horo.lunchtray.data.DataSource
+import com.horo.lunchtray.model.MenuItem
 
 @Composable
 fun ChooseAccompanimentScreen(
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
+    optionList: List<MenuItem>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.spacedBy(
-                dimensionResource(
-                    R.dimen.padding_medium
+    Column(verticalArrangement = Arrangement.Top, modifier = modifier.fillMaxSize()) {
+        BaseMenuScreen(
+            optionList = optionList, modifier = Modifier.padding(
+                end = dimensionResource(
+                    R
+                        .dimen.padding_medium
                 )
             )
-        ) {
-            OutlinedButton(
-                onClick = onCancelClick,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(text = stringResource(R.string.cancel).uppercase())
-            }
-            Button(
-                onClick = onNextClick,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.next).uppercase()
+        )
+        Column(modifier = Modifier) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_medium)),
+                horizontalArrangement = Arrangement.spacedBy(
+                    dimensionResource(
+                        R.dimen.padding_medium
+                    )
                 )
+            ) {
+                OutlinedButton(
+                    onClick = onCancelClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = stringResource(R.string.cancel).uppercase())
+                }
+                Button(
+                    onClick = onNextClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(R.string.next).uppercase()
+                    )
+                }
             }
         }
     }
@@ -57,6 +70,7 @@ fun ChooseAccompanimentScreenPreview() {
     ChooseAccompanimentScreen(
         onCancelClick = {},
         onNextClick = {},
+        optionList = DataSource.accompanimentMenuItems,
         modifier = Modifier.fillMaxSize(),
     )
 }

@@ -15,37 +15,50 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.horo.lunchtray.R
+import com.horo.lunchtray.data.DataSource
+import com.horo.lunchtray.model.MenuItem
 
 @Composable
 fun ChooseEntreeScreen(
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
+    optionList: List<MenuItem.EntreeItem>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Row(
+    Column(
+        verticalArrangement = Arrangement.Top, modifier = modifier.padding(
+            dimensionResource(R.dimen.padding_medium)
+        )
+    ) {
+        BaseMenuScreen(optionList = optionList, modifier = Modifier.fillMaxWidth())
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.spacedBy(
-                dimensionResource(
-                    R.dimen.padding_medium
-                )
-            )
+                .padding(top = dimensionResource(R.dimen.padding_medium))
         ) {
-            OutlinedButton(
-                onClick = onCancelClick,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(text = stringResource(R.string.cancel).uppercase())
-            }
-            Button(
-                onClick = onNextClick,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.next).uppercase()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(
+                    dimensionResource(
+                        R.dimen.padding_medium
+                    )
                 )
+            ) {
+                OutlinedButton(
+                    onClick = onCancelClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = stringResource(R.string.cancel).uppercase())
+                }
+                Button(
+                    onClick = onNextClick,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(R.string.next).uppercase()
+                    )
+                }
             }
         }
     }
@@ -57,6 +70,7 @@ fun ChooseEntreeScreenPreview() {
     ChooseEntreeScreen(
         onCancelClick = {},
         onNextClick = {},
+        optionList = DataSource.entreeMenuItems,
         modifier = Modifier.fillMaxSize(),
     )
 }
