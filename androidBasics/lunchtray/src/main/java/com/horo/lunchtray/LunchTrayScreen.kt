@@ -15,9 +15,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,6 +31,7 @@ import com.horo.lunchtray.ui.ChooseEntreeScreen
 import com.horo.lunchtray.ui.ChooseSideDishScreen
 import com.horo.lunchtray.ui.OrderCheckoutScreen
 import com.horo.lunchtray.ui.StartOrderScreen
+import com.horo.lunchtray.ui.viewmodels.LunchTrayViewModel
 
 enum class LunchTrayScreen(@StringRes val screenNameRes: Int) {
     StartOrder(R.string.app_name),
@@ -39,7 +42,10 @@ enum class LunchTrayScreen(@StringRes val screenNameRes: Int) {
 }
 
 @Composable
-fun LunchTrayScreen(navController: NavHostController = rememberNavController()) {
+fun LunchTrayScreen(
+    navController: NavHostController = rememberNavController(),
+    viewModel: LunchTrayViewModel = viewModel(),
+) {
     val onNavigationUpClick: () -> Unit = {
         navController.navigateUp()
     }
@@ -48,6 +54,7 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
         currentBackStackEntry?.destination?.route ?: LunchTrayScreen.StartOrder.name
     )
     val canNavigateBack = navController.previousBackStackEntry != null
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -144,6 +151,12 @@ fun LunchTrayScreen(navController: NavHostController = rememberNavController()) 
                                 false
                             )
                         },
+                        selectedEntreeItem = uiState.entreeItem,
+                        selectedSideDishItem = uiState.sideDishItem,
+                        selectedAccompanimentItem = uiState.accompanimentItem,
+                        subtotal = uiState.subtotal,
+                        tax = uiState.tax,
+                        total = uiState.total,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

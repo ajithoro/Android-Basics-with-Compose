@@ -1,12 +1,12 @@
-package com.horo.lunchtray.ui
+package com.horo.lunchtray.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -33,11 +33,7 @@ fun BaseMenuScreen(
 
     var selectedItemName by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        verticalArrangement = Arrangement.Top, modifier = modifier.wrapContentHeight(
-            align = Alignment.Top
-        )
-    ) {
+    Column {
         optionList.forEach { item ->
             MenuItem(
                 menuItem = item,
@@ -47,6 +43,7 @@ fun BaseMenuScreen(
                 },
                 modifier = Modifier
             )
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
         }
     }
 }
@@ -91,7 +88,6 @@ fun MenuItem(
             )
             HorizontalDivider(
                 thickness = dimensionResource(R.dimen.divider_thickness),
-                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small))
             )
         }
     }
@@ -103,5 +99,20 @@ fun BaseMenuScreenPreview() {
     BaseMenuScreen(
         optionList = DataSource.entreeMenuItems,
         modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MenuItemPreview() {
+    MenuItem(
+        menuItem = MenuItem.EntreeItem(
+            name = "Cauliflower",
+            description = "Whole cauliflower, brined, roasted, and deep fried",
+            price = 7.00,
+        ),
+        selectedItemName = "Cauliflower",
+        onItemClick = {},
+        modifier = Modifier
     )
 }
