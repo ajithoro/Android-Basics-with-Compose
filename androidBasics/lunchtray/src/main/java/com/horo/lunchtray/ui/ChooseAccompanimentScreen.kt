@@ -24,7 +24,8 @@ import com.horo.lunchtray.ui.components.ButtonGroup
 fun ChooseAccompanimentScreen(
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
-    optionList: List<MenuItem>,
+    optionList: List<MenuItem.AccompanimentItem>,
+    onItemClick: (MenuItem.AccompanimentItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var selectedItemName by rememberSaveable { mutableStateOf("") }
@@ -37,8 +38,9 @@ fun ChooseAccompanimentScreen(
         BaseMenuScreen(
             optionList = optionList,
             selectedItemName = selectedItemName,
-            onItemClick = { currentSelectedItemName ->
-                selectedItemName = currentSelectedItemName
+            onItemClick = { currentSelectedItem ->
+                selectedItemName = currentSelectedItem.name
+                onItemClick(currentSelectedItem as MenuItem.AccompanimentItem)
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -62,6 +64,7 @@ fun ChooseAccompanimentScreenPreview() {
         onCancelClick = {},
         onNextClick = {},
         optionList = DataSource.accompanimentMenuItems,
+        onItemClick = {},
         modifier = Modifier,
     )
 }

@@ -25,6 +25,7 @@ fun ChooseEntreeScreen(
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
     optionList: List<MenuItem.EntreeItem>,
+    onItemClick: (MenuItem.EntreeItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var selectedItemName by rememberSaveable { mutableStateOf("") }
@@ -37,8 +38,9 @@ fun ChooseEntreeScreen(
         BaseMenuScreen(
             optionList = optionList,
             selectedItemName = selectedItemName,
-            onItemClick = { currentSelectedItemName ->
-                selectedItemName = currentSelectedItemName
+            onItemClick = { currentSelectedItem ->
+                selectedItemName = currentSelectedItem.name
+                onItemClick(currentSelectedItem as MenuItem.EntreeItem)
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -62,6 +64,7 @@ fun ChooseEntreeScreenPreview() {
         onCancelClick = {},
         onNextClick = {},
         optionList = DataSource.entreeMenuItems,
+        onItemClick = {},
         modifier = Modifier,
     )
 }

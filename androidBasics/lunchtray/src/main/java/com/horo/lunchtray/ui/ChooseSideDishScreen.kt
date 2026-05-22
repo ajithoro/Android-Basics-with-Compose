@@ -24,6 +24,7 @@ fun ChooseSideDishScreen(
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
     optionList: List<MenuItem.SideDishItem>,
+    onItemClick: (MenuItem.SideDishItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -33,8 +34,9 @@ fun ChooseSideDishScreen(
         BaseMenuScreen(
             optionList = optionList,
             selectedItemName = selectedItemName,
-            onItemClick = { currentSelectedItemName ->
-                selectedItemName = currentSelectedItemName
+            onItemClick = { currentSelectedItem ->
+                selectedItemName = currentSelectedItem.name
+                onItemClick(currentSelectedItem as MenuItem.SideDishItem)
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -58,6 +60,7 @@ fun ChooseSideDishScreenPreview() {
         onCancelClick = {},
         onNextClick = {},
         optionList = DataSource.sideDishMenuItems,
+        onItemClick = {},
         modifier = Modifier,
     )
 }

@@ -104,6 +104,9 @@ fun LunchTrayScreen(
                             navController.navigate(LunchTrayScreen.ChooseSideDish.name)
                         },
                         optionList = DataSource.entreeMenuItems,
+                        onItemClick = {
+                            viewModel.updateSelectedItem(it)
+                        },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -119,6 +122,9 @@ fun LunchTrayScreen(
                             navController.navigate(LunchTrayScreen.ChooseAccompaniment.name)
                         },
                         optionList = DataSource.sideDishMenuItems,
+                        onItemClick = {
+                            viewModel.updateSelectedItem(it)
+                        },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -134,6 +140,9 @@ fun LunchTrayScreen(
                             navController.navigate(LunchTrayScreen.OrderCheckout.name)
                         },
                         optionList = DataSource.accompanimentMenuItems,
+                        onItemClick = {
+                            viewModel.updateSelectedItem(it)
+                        },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -151,12 +160,7 @@ fun LunchTrayScreen(
                                 false
                             )
                         },
-                        selectedEntreeItem = uiState.entreeItem,
-                        selectedSideDishItem = uiState.sideDishItem,
-                        selectedAccompanimentItem = uiState.accompanimentItem,
-                        subtotal = uiState.subtotal,
-                        tax = uiState.tax,
-                        total = uiState.total,
+                        orderSummary = uiState,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

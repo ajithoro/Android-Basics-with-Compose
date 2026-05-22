@@ -17,21 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.horo.lunchtray.R
-import com.horo.lunchtray.data.DataSource
 import com.horo.lunchtray.extensions.toFormattedPrice
-import com.horo.lunchtray.model.MenuItem
+import com.horo.lunchtray.model.OrderSummary
 import com.horo.lunchtray.ui.components.ButtonGroup
 
 @Composable
 fun OrderCheckoutScreen(
     onCancelClick: () -> Unit,
     onSubmitClick: () -> Unit,
-    selectedEntreeItem: MenuItem.EntreeItem?,
-    selectedSideDishItem: MenuItem.SideDishItem?,
-    selectedAccompanimentItem: MenuItem.AccompanimentItem?,
-    subtotal: Double,
-    tax: Double,
-    total: Double,
+    orderSummary: OrderSummary,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(dimensionResource(R.dimen.padding_medium))) {
@@ -48,19 +42,9 @@ fun OrderCheckoutScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(text = selectedEntreeItem?.name ?: "")
+                Text(text = orderSummary.entreeItem?.name ?: "")
                 Text(
-                    text = selectedEntreeItem?.price?.toFormattedPrice() ?: 0.0.toFormattedPrice(),
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Text(text = selectedSideDishItem?.name ?: "")
-                Text(
-                    text = selectedSideDishItem?.price?.toFormattedPrice()
+                    text = orderSummary.entreeItem?.price?.toFormattedPrice()
                         ?: 0.0.toFormattedPrice(),
                 )
             }
@@ -69,23 +53,34 @@ fun OrderCheckoutScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(text = selectedAccompanimentItem?.name ?: "")
+                Text(text = orderSummary.sideDishItem?.name ?: "")
                 Text(
-                    text = selectedAccompanimentItem?.price?.toFormattedPrice()
+                    text = orderSummary.sideDishItem?.price?.toFormattedPrice()
+                        ?: 0.0.toFormattedPrice(),
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                Text(text = orderSummary.accompanimentItem?.name ?: "")
+                Text(
+                    text = orderSummary.accompanimentItem?.price?.toFormattedPrice()
                         ?: 0.0.toFormattedPrice(),
                 )
             }
             HorizontalDivider(thickness = dimensionResource(R.dimen.divider_thickness))
             Text(
-                text = stringResource(R.string.subtotal, subtotal.toFormattedPrice()),
+                text = stringResource(R.string.subtotal, orderSummary.subtotal.toFormattedPrice()),
                 modifier = Modifier.align(alignment = Alignment.End)
             )
             Text(
-                text = stringResource(R.string.tax, tax.toFormattedPrice()),
+                text = stringResource(R.string.tax, orderSummary.tax.toFormattedPrice()),
                 modifier = Modifier.align(alignment = Alignment.End)
             )
             Text(
-                text = stringResource(R.string.total, total.toFormattedPrice()),
+                text = stringResource(R.string.total, orderSummary.total.toFormattedPrice()),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(alignment = Alignment.End)
             )
@@ -107,12 +102,8 @@ fun OrderCheckoutScreenPreview() {
     OrderCheckoutScreen(
         onCancelClick = {},
         onSubmitClick = {},
-        selectedEntreeItem = DataSource.entreeMenuItems.first(),
-        selectedSideDishItem = DataSource.sideDishMenuItems.first(),
-        selectedAccompanimentItem = DataSource.accompanimentMenuItems.first(),
-        subtotal = 9.0,
-        tax = 34.0,
-        total = 100.0
+        orderSummary = OrderSummary(),
+        modifier = Modifier
     )
 }
 

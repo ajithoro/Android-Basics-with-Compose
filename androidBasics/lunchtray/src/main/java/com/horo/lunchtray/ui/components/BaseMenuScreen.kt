@@ -25,7 +25,7 @@ import com.horo.lunchtray.model.MenuItem
 fun BaseMenuScreen(
     optionList: List<MenuItem>,
     selectedItemName: String,
-    onItemClick: (String) -> Unit,
+    onItemClick: (MenuItem) -> Unit,
     modifier: Modifier,
 ) {
     Column {
@@ -45,7 +45,7 @@ fun BaseMenuScreen(
 fun MenuItem(
     menuItem: MenuItem,
     selectedItemName: String,
-    onItemClick: (String) -> Unit,
+    onItemClick: (MenuItem) -> Unit,
     modifier: Modifier,
 ) {
     Row(
@@ -53,13 +53,13 @@ fun MenuItem(
             .fillMaxWidth()
             .selectable(
                 selected = selectedItemName == menuItem.name,
-                onClick = { onItemClick(menuItem.name) }),
+                onClick = { onItemClick(menuItem) }),
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selectedItemName == menuItem.name,
-            onClick = { onItemClick(menuItem.name) },
+            onClick = { onItemClick(menuItem) },
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(
