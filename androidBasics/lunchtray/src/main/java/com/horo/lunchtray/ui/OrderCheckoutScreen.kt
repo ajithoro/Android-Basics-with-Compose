@@ -96,7 +96,7 @@ fun OrderCheckoutScreen(
             nextButtonResId = R.string.submit,
             onCancelClick = onCancelClick,
             onNextClick = onSubmitClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

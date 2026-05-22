@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,13 +27,20 @@ fun ChooseAccompanimentScreen(
     optionList: List<MenuItem>,
     modifier: Modifier = Modifier,
 ) {
+    var selectedItemName by rememberSaveable { mutableStateOf("") }
+
     Column(
         verticalArrangement = Arrangement.Top, modifier = modifier.padding(
             dimensionResource(R.dimen.padding_medium)
         )
     ) {
         BaseMenuScreen(
-            optionList = optionList, modifier = Modifier.fillMaxWidth()
+            optionList = optionList,
+            selectedItemName = selectedItemName,
+            onItemClick = { currentSelectedItemName ->
+                selectedItemName = currentSelectedItemName
+            },
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
         ButtonGroup(
@@ -37,8 +48,9 @@ fun ChooseAccompanimentScreen(
             R.string.next,
             onCancelClick,
             onNextClick,
+            nextButtonEnabled = selectedItemName.isNotEmpty(),
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         )
     }
 }
@@ -53,5 +65,3 @@ fun ChooseAccompanimentScreenPreview() {
         modifier = Modifier,
     )
 }
-
-

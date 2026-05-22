@@ -13,10 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -28,19 +24,16 @@ import com.horo.lunchtray.model.MenuItem
 @Composable
 fun BaseMenuScreen(
     optionList: List<MenuItem>,
+    selectedItemName: String,
+    onItemClick: (String) -> Unit,
     modifier: Modifier,
 ) {
-
-    var selectedItemName by rememberSaveable { mutableStateOf("") }
-
     Column {
         optionList.forEach { item ->
             MenuItem(
                 menuItem = item,
                 selectedItemName = selectedItemName,
-                onItemClick = { currentSelectedItemName ->
-                    selectedItemName = currentSelectedItemName
-                },
+                onItemClick = onItemClick,
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
@@ -60,8 +53,7 @@ fun MenuItem(
             .fillMaxWidth()
             .selectable(
                 selected = selectedItemName == menuItem.name,
-                onClick = { onItemClick(menuItem.name) }
-            ),
+                onClick = { onItemClick(menuItem.name) }),
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -75,16 +67,13 @@ fun MenuItem(
             )
         ) {
             Text(
-                text = menuItem.name,
-                style = MaterialTheme.typography.headlineSmall
+                text = menuItem.name, style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                text = menuItem.description,
-                style = MaterialTheme.typography.bodyLarge
+                text = menuItem.description, style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = menuItem.getFormattedPrice(),
-                style = MaterialTheme.typography.bodyMedium
+                text = menuItem.getFormattedPrice(), style = MaterialTheme.typography.bodyMedium
             )
             HorizontalDivider(
                 thickness = dimensionResource(R.dimen.divider_thickness),
@@ -98,6 +87,8 @@ fun MenuItem(
 fun BaseMenuScreenPreview() {
     BaseMenuScreen(
         optionList = DataSource.entreeMenuItems,
+        selectedItemName = "",
+        onItemClick = {},
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -110,9 +101,6 @@ fun MenuItemPreview() {
             name = "Cauliflower",
             description = "Whole cauliflower, brined, roasted, and deep fried",
             price = 7.00,
-        ),
-        selectedItemName = "Cauliflower",
-        onItemClick = {},
-        modifier = Modifier
+        ), selectedItemName = "Cauliflower", onItemClick = {}, modifier = Modifier
     )
 }

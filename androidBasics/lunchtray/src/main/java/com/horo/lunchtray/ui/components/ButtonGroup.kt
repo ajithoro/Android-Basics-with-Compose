@@ -18,6 +18,7 @@ fun ButtonGroup(
     nextButtonResId: Int,
     onCancelClick: () -> Unit,
     onNextClick: () -> Unit,
+    nextButtonEnabled: Boolean = true,
     modifier: Modifier,
 ) {
     Row(
@@ -36,6 +37,7 @@ fun ButtonGroup(
         }
         Button(
             onClick = onNextClick,
+            enabled = nextButtonEnabled,
             modifier = Modifier.weight(1f)
         ) {
             Text(
@@ -53,6 +55,7 @@ fun ButtonGroupPreview() {
         nextButtonResId = R.string.next,
         onCancelClick = {},
         onNextClick = {},
-        modifier = Modifier
+        nextButtonEnabled = true,
+        modifier = Modifier,
     )
 }
