@@ -34,6 +34,12 @@ class LunchTrayViewModel : ViewModel() {
         updatePrices()
     }
 
+    fun resetOrder() {
+        _uiState.update {
+            OrderSummary()
+        }
+    }
+
     private fun updatePrices() {
         _uiState.update {
             val subtotal = ((it.entreeItem?.price ?: 0.0)

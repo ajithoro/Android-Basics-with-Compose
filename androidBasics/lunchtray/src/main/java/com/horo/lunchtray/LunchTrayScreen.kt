@@ -95,6 +95,7 @@ fun LunchTrayScreen(
                 composable(route = LunchTrayScreen.ChooseEntree.name) {
                     ChooseEntreeScreen(
                         onCancelClick = {
+                            viewModel.resetOrder()
                             navController.popBackStack(
                                 LunchTrayScreen.StartOrder.name,
                                 false
@@ -113,6 +114,7 @@ fun LunchTrayScreen(
                 composable(route = LunchTrayScreen.ChooseSideDish.name) {
                     ChooseSideDishScreen(
                         onCancelClick = {
+                            viewModel.resetOrder()
                             navController.popBackStack(
                                 LunchTrayScreen.StartOrder.name,
                                 false
@@ -131,6 +133,7 @@ fun LunchTrayScreen(
                 composable(route = LunchTrayScreen.ChooseAccompaniment.name) {
                     ChooseAccompanimentScreen(
                         onCancelClick = {
+                            viewModel.resetOrder()
                             navController.popBackStack(
                                 LunchTrayScreen.StartOrder.name,
                                 false
@@ -149,12 +152,14 @@ fun LunchTrayScreen(
                 composable(route = LunchTrayScreen.OrderCheckout.name) {
                     OrderCheckoutScreen(
                         onCancelClick = {
+                            viewModel.resetOrder()
                             navController.popBackStack(
                                 LunchTrayScreen.StartOrder.name,
                                 false
                             )
                         },
                         onSubmitClick = {
+                            viewModel.resetOrder()
                             navController.popBackStack(
                                 LunchTrayScreen.StartOrder.name,
                                 false
