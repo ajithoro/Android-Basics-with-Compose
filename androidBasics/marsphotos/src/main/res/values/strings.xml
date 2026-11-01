@@ -4,4 +4,5 @@
     <string name="placeholder_success_text">Placeholder Success Text</string>
     <string name="app_bar_title">Mars Photos</string>
     <string name="failed_to_load">Failed to load.</string>
+    <string name="no_internet">No internet.</string>
 </resources>

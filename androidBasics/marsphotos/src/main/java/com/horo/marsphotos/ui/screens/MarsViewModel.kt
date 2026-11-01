@@ -13,7 +13,7 @@ import retrofit2.HttpException
 sealed interface MarsUiState {
     object Loading : MarsUiState
     data class Success(val photos: String) : MarsUiState
-    object Error : MarsUiState
+    data class Error(val error: String) : MarsUiState
 }
 
 class MarsViewModel : ViewModel() {
@@ -31,9 +31,9 @@ class MarsViewModel : ViewModel() {
                 val photoList = MarsApi.marsApiService.getPhotoList()
                 MarsUiState.Success(photos = "Total photos: ${photoList.size}")
             } catch (e: IOException) {
-                MarsUiState.Error
+                MarsUiState.Error(error = "No Internet")
             } catch (e: HttpException) {
-                MarsUiState.Error
+                MarsUiState.Error(error = "Failed to load.")
             }
         }
     }
